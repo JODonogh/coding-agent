@@ -1,0 +1,20 @@
+{
+  "name": "coding-agent",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+        "node": ">=12.10.0",
+        "vscode": "^1.80.0"
+      },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@langchain/community": "^0.3.46",
+    "@langchain/langgraph": "^0.3.1",
+    "@langchain/ollama": "^0.2.2",
+    "@langchain/openai": "^0.5.13",
+    "dotenv": "^16.5.0"
+  }
+}
