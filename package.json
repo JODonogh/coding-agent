@@ -1,15 +1,27 @@
 {
   "name": "coding-agent",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Coding agent for ideation",
+  "main": "./index.js",
   "engines": {
         "node": ">=12.10.0",
         "vscode": "^1.80.0"
       },
   "keywords": [],
-  "author": "",
+  "author": "Jonathan O'Donoghue",
   "license": "ISC",
   "type": "module",
+  "activationEvents": [
+    "onCommand:coding-agent.startExplanation"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "coding-agent.startExplanation",
+        "title": "Start Code Explanation"
+      }
+    ]
+  },
   "dependencies": {
     "@langchain/community": "^0.3.46",
     "@langchain/langgraph": "^0.3.1",

@@ -18,11 +18,11 @@ const llm = new ChatOllama({ model: "llama3", temperature: 0.8});
 
 async function explainCodeNode(state) {
     console.log("-> executing the 'explainCodeNode'....");
-    const { codeToExplain } = state;
+    const { codeToExplain, language } = state;
 
     const systemPrompt = "You are an expert programmer providing clear and concise explanations of code. Focus on the functionality and the 'how-it-works'.";
-    const humanPrompt = `Please explain the JavaScript snippet in a clear, concise way. What does it do and how does it work? 
-    \`\`\`javascript
+    const humanPrompt = `Please explain the following ${language} code in a clear, concise way. What does it do and how does it work?
+    \`\`\`${language}
     ${codeToExplain}
     \`\`\``;
 
@@ -33,7 +33,6 @@ async function explainCodeNode(state) {
     const explanation = response.content.toString();
 
     console.log(' - Generated explanation.');
-
     return { explanation: explanation };
 }
 
@@ -42,41 +41,80 @@ const graphState = {
     explanation: { value: (x, y) => y, default: () => ""},
 }
 
+/** 
+* @param {vscode.ExtensionContext} context
+*/
+function activate(context) {
+    console.log("Congratulations, your extension 'coding-agent' is now active!");
+
+    let disposable = vscode.commands.registerCommand('coding-agent.startExplanation', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if(!editor){
+            vscode.window.showInformationMessage('No active editor found.');
+            return;
+        }
+
+    const codeToExplain = await vscode.window.showInputBox({
+        prompt: 'Paste the code you want explained',
+        placeHolder: 'Enter your code here',
+        ignoreFocusOut: true,
+        value: '',
+        multiline: true // Only supported in VS Code Insiders or with custom UI
+    });
+
+    if (!codeToExplain) {
+        vscode.window.showInformationMessage('No code provided.');
+        return;
+    }
+
+        const selectedCode = editor.document.getText(editor.selection);
+        if(!selectedCode){
+            vscode.window.showInformationMessage('Please select a piece of code to explain.');
+            return;
+        }
+    
+            // Prompt user for language
+    const language = await vscode.window.showInputBox({
+        prompt: 'Enter the programming language (e.g., python, javascript, java, etc.)',
+        placeHolder: 'e.g., python',
+        ignoreFocusOut: true
+    });
+
+    if (!language) {
+        vscode.window.showInformationMessage('No language provided.');
+        return;
+    }
+
+    vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "Coding Agent is thinking....",
+            cancellable: false
+        }, async (progress) => {
+            try {
+                const finalState = await app.invoke({ codeToExplain: selectedCode});
+                const explanation = finalState.explanation;
+                const doc = await vscode.workspace.openTextDocument({ content: explanation, language: 'markdown'});
+                await vscode.window.showTextDocument(doc, vscode.ViewColumn.Beside);
+            } catch(error){
+                console.error("Error running coding agent:", error);
+                vscode.window.showErrorMessage("Failed to run agent. Is Ollama running?");
+            }
+        });
+
+    // Pass both to your agent
+    const finalState = await app.invoke({ codeToExplain, language });
+    });
+
+    context.subscriptions.push(disposable);
+}
+
 //create graph
 const graph = new StateGraph( { channels: graphState });
-
-//add single node with name & function to graph, set graphs root node, set its leaf node
 graph.addNode("explainer", explainCodeNode);
 graph.setEntryPoint("explainer");
 graph.setFinishPoint("explainer");
-
 const app = graph.compile();
 
-async function main(){
-    console.log("Starting the Code Explainer Agent...");
-
-    const code = `const bubbleSort = (arr) => {
-        let n = arr.length;
-        for (let i = 0; i < n - 1; i ++){
-            for (let j = 0; j < n -i -1; j++){
-                if (arr[j] > arr[j + 1]){
-                    [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-                }
-            } 
-        }
-        return arr;
-        };`;
-
-        //graph input 
-        const input = { codeToExplain: code };
-
-        // use Stream to see execution steps
-        for await (const event of await app.stream(input)){
-            for (const [key, value] of Object.entries(event)) {
-                console.log(`\n## Event: ${key} ##`);
-                console.log(JSON.stringify(value, null, 2));
-            }
-        }
-}
-
-main();
+module.exports = {
+    activate
+};
