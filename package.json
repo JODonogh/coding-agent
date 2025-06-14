@@ -11,6 +11,7 @@
   "author": "Jonathan O'Donoghue",
   "license": "ISC",
   "type": "module",
+  "repository": "https://github.com/JODonogh/coding-agent",
   "activationEvents": [
     "onCommand:coding-agent.startExplanation"
   ],
