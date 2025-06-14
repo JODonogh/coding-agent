@@ -1,8 +1,8 @@
-import { StateGraph } from "@langchain/langgraph";
-import { ChatOllama } from "@langchain/ollama";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import "dotenv/config";
-import * as vscode from 'vscode';
+const { StateGraph } = require("@langchain/langgraph");
+const { ChatOllama } = require("@langchain/ollama");
+const { HumanMessage, SystemMessage } = require("@langchain/core/messages");
+require("dotenv/config");
+const vscode = require('vscode');
 
 /**
  * @typedef {Object} GraphState
