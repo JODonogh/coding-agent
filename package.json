@@ -1,8 +1,8 @@
 {
   "name": "coding-agent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Coding agent for ideation",
-  "main": "./index.js",
+  "main": "./src/index.js",
   "publisher": "jodonoghue",
   "engines": {
         "node": ">=12.10.0",
@@ -13,9 +13,27 @@
   "license": "ISC",
   "repository": "https://github.com/JODonogh/coding-agent",
   "activationEvents": [
-    "onCommand:coding-agent.startExplanation"
+    "onCommand:coding-agent.startExplanation",
+    "onView:codingAgentView"
   ],
   "contributes": {
+    "viewsContainers": {
+    "activitybar": [
+      {
+        "id": "codingAgentSidebar",
+        "title": "Coding Agent",
+        "icon": "media/icon.png"
+      }
+    ]
+  },
+  "views": {
+    "codingAgentSidebar": [
+      {
+        "id": "codingAgentView",
+        "name": "Coding Agent"
+      }
+    ]
+  },
     "commands": [
       {
         "command": "coding-agent.startExplanation",
