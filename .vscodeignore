@@ -1,1 +1,20 @@
 .env
+
+# Ignore node_modules except production dependencies
+**/node_modules/**
+
+# Ignore test files
+**/*.test.js
+**/*.spec.js
+test/**
+tests/**
+
+# Ignore build, config, and misc files
+.vscode/**
+.gitignore
+.vscodeignore
+*.md
+*.map
+*.log
+*.ts
+*.json
