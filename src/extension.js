@@ -56,11 +56,21 @@ class CodingAgentViewProvider {
             const panelJsUri = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, 'src', 'panel', 'panel.js')
             );
+
+                // Create a secure URI for the panel's CSS
+            const panelCssUri = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, 'src', 'panel', 'panel.css')
+            );
             
             // Replace the script tag with the webview-safe URI
             html = html.replace(
                 '<script src="panel.js"></script>', 
                 `<script src="${panelJsUri}"></script>`
+            );
+
+            html = html.replace(
+            '<link rel="stylesheet" href="panel.css">',
+            `<link rel="stylesheet" href="${panelCssUri}">`
             );
 
             webviewView.webview.html = html;
