@@ -1,7 +1,7 @@
 {
   "name": "mondricode-agent",
   "displayName": "MondriCode Agent",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Coding agent for ideation",
   "main": "./src/extension.js",
   "publisher": "JODonogh",
@@ -17,9 +17,9 @@
   "license": "ISC",
   "repository": "https://github.com/JODonogh/coding-agent",
   "dependencies": {
-    "@langchain/community": "^0.3.46",
-    "@langchain/langgraph": "^0.3.1",
-    "@langchain/ollama": "^0.2.2",
+    "@langchain/community": "^0.0.52",
+    "@langchain/langgraph": "^0.0.4",
+    "@langchain/ollama": "^0.0.1",
     "dotenv": "^16.5.0"
   },
   "activationEvents": [
@@ -38,6 +38,7 @@
 "views": {
   "coding-agent-sidebar-container": [
     {
+      "type": "webview",
       "id": "codingAgentView",
       "name": "Coding Agent"
     }
